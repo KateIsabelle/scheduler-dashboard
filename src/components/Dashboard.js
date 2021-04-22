@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import axios from "axios";
 import classnames from "classnames";
 import Loading from "./Loading";
 import Panel from "./Panel";
@@ -29,8 +29,11 @@ const data = [
 
 class Dashboard extends Component {
   state = { 
-    loading: false,
-    focused: null
+    loading: true,
+    focused: null,
+    days: [],
+    appointments: {},
+    interviewers: {}
   }
 
   componentDidMount() {
@@ -39,6 +42,18 @@ class Dashboard extends Component {
     if (focused) {
       this.setState({ focused });
     }
+    Promise.all([
+      axios.get("/api/days"),
+      axios.get("/api/appointments"),
+      axios.get("/api/interviewers")
+    ]).then(([days, appointments, interviewers]) => {
+      this.setState({
+        loading: false,
+        days: days.data,
+        appointments: appointments.data,
+        interviewers: interviewers.data
+      });
+    });
   }
 
   componentDidUpdate(previousProps, previousState) {
