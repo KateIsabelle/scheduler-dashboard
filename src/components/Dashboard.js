@@ -34,9 +34,10 @@ class Dashboard extends Component {
   }
 
   selectPanel(id) {
-    this.setState({
-     focused: id
-    });
+    this.setState(prevState => ({
+    //toggle focus between on (id) and off (null)
+     focused: prevState.focused ? null : id
+    }));
    }
 
   render() {
@@ -47,7 +48,7 @@ class Dashboard extends Component {
     if (this.state.loading) {
       return <Loading />;
     }
-    {/* if this.state.focus is null, return true for every panel, else let it filter and return the focused panel*/}
+    //if this.state.focus is null, return true for every panel, else filter catches only focused panel
     const panels = data.filter(
     panel => this.state.focused === null || this.state.focused === panel.id
    ).map(panel => (
